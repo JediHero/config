@@ -29,4 +29,4 @@ git config --global user.email = "hansen.rusty@gmail.com"
 git config --global core.editor = "nvim"
 
 # Create other aliases
-echo "alias ll=ls -la" >> ~/.bashrc
+echo 'alias ll="ls -la"' >> ~/.bashrc
