@@ -18,7 +18,7 @@ echo "alias vim=/usr/local/bin/nvim.appimage" >> ~/.bashrc
 
 # nvim config
 mkdir ~/.config/nvim -p
-cp ./init.nvim ~/.config/nvim
+cp ./init.vim ~/.config/nvim
 
 # tmux config
 cp ./.tmux.conf ~
