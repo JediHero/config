@@ -16,17 +16,18 @@ sudo update-alternatives --install /usr/bin/vimdiff vimdiff "${CUSTOM_NVIM_PATH}
 echo "alias nvim=/usr/local/bin/nvim.appimage" >> ~/.bashrc
 echo "alias vim=/usr/local/bin/nvim.appimage" >> ~/.bashrc
 
-# Copy init.nvim
+# nvim config
 mkdir ~/.config/nvim -p
 cp ./init.nvim ~/.config/nvim
 
-# Copy tmux config
+# tmux config
 cp ./.tmux.conf ~
 
-# Add git config
+# git config
 git config --global user.name = "Rusty Hansen"
 git config --global user.email = "hansen.rusty@gmail.com"
 git config --global core.editor = "nvim"
+cp ./.gitignore_global ~
 
 # Create other aliases
 echo 'alias ll="ls -la"' >> ~/.bashrc
