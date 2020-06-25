@@ -31,5 +31,8 @@ cp ./.gitignore_global ~
 
 # Create other aliases
 echo 'alias ll="ls -la"' >> ~/.bashrc
-echo 'alias gu="git push -u origin master"'
-echo 'alias gs="git status"'
+echo 'alias gu="git push -u origin master"' >> ~/.bashrc
+echo 'alias gs="git status"' >> ~/.bashrc
+
+# Reset the shell
+exec $SHELL
