@@ -23,5 +23,10 @@ cp ./init.nvim ~/.config/nvim
 # Copy tmux config
 cp ./.tmux.conf ~
 
+# Add git config
+git config --global user.name = "Rusty Hansen"
+git config --global user.email = "hansen.rusty@gmail.com"
+git config --global core.editor = "nvim"
+
 # Create other aliases
 echo "alias ll=ls -la" >> ~/.bashrc
