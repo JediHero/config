@@ -30,3 +30,5 @@ git config --global core.editor = "nvim"
 
 # Create other aliases
 echo 'alias ll="ls -la"' >> ~/.bashrc
+echo 'alias gu="git push -u origin master"'
+echo 'alias gs="git status"'
