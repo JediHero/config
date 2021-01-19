@@ -21,12 +21,13 @@ set colorcolumn=80
 syntax on
 colorscheme OceanicNext
 set ignorecase
-set nohlsearch
 set hidden
 set noerrorbells
 set scrolloff=8
-set incsearch
 set signcolumn=yes
+set foldenable
+set conceallevel=2
+set title
 
 " Line numbering
 set number
@@ -40,28 +41,123 @@ set noswapfile
 set splitbelow
 set splitright
 
+" displays tabs with :set list & displays when a line runs off-screen
+set listchars=tab:<.,trail:.,precedes:<,extends:>
+set list
+
+" File Settings
+set encoding=utf8
+set undodir=~/.vim_runtime/undodir
+set undofile
+
+" Searching and patterns
+set ignorecase
+set smartcase
+set smarttab
+set incsearch
+
+" =============================================================================
+" Filetype settings
+" =============================================================================
+
+" Markdown
+au FileType *.md expandtab shiftwidth=2 tabstop=2 smartindent
+
+" Python
+" -----------------------------------------------------------------------------
+"au BufRead *.py compiler nose
+au FileType python set omnifunc=pythoncomplete#Complete
+au FileType python setlocal expandtab shiftwidth=4 tabstop=4 smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with
+au BufRead *.py set efm=%C\ %.%#,%A\ \ File\ \"%f\"\\,\ line\ %l%.%#,%Z%[%^\ ]%\\@=%m
+au BufWritePre *.py %s/\s\+$//e
+au FileType python set foldmethod=indent foldlevel=99
+
+""rope options
+"map <leader>j :RopeGotoDefinition<CR>
+"map <leader>r :RopeRename<CR>
+
+" " Don't let pyflakes use the quickfix window
+" let g:pyflakes_use_quickfix = 0
+
+" " Run pyflake8
+" autocmd FileType python map <Leader>8 :call Flake8()<CR>
+" " Run when saving py files
+" autocmd BufWritePost *.py call Flake8()
+" " Ignore Errors
+" let g:flake8_ignore="E501,W293"
+
+" Ignore these files when completing
+set wildignore+=*.o,*.obj,.git,*.pyc
+set wildignore+=eggs/**
+set wildignore+=*.egg-info/**
+
+" Add the virtualenv's site-packages to vim path
+if has('python')
+py << EOF
+import os.path
+import sys
+import vim
+if 'VIRTUAL_ENV' in os.environ:
+    project_base_dir = os.environ['VIRTUAL_ENV']
+    sys.path.insert(0, project_base_dir)
+    activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
+    execfile(activate_this, dict(__file__=activate_this))
+EOF
+endif
+
+" Load up virtualenv's vimrc if it exists
+if filereadable($VIRTUAL_ENV . '/.vimrc')
+    source $VIRTUAL_ENV/.vimrc
+endif
+
 " =============================================================================
 " PLUG-INS
 " =============================================================================
-" golden-ratio
-" MatchTagAlways
-" nerdtree
-" semshi
-" targets.vim
-" vim-bugtabline
-" vim-commentary
-" vim-multiple-cursors
-" vim-peekaboo
-" vim-pythonsense
-" vim-sandwich
-" vim-which-key
-
+" https://github.com/roman/golden-ratio
+" https://github.com/preservim/nerdtree
+" https://github.com/wellle/targets.vim
+" https://github.com/ap/vim-buftabline
+" https://github.com/tpope/vim-commentary
+" https://github.com/terryma/vim-multiple-cursors
+" https://github.com/junegunn/vim-peekaboo
+" https://github.com/machakann/vim-sandwich
+" https://github.com/liuchengxu/vim-which-key
+" https://github.com/junegunn/vim-easy-align
+" https://github.com/plasticboy/vim-markdown
+" https://github.com/godlygeek/tabular
+" https://github.com/dkarter/bullets.vim
 
 " =============================================================================
 " Plugin settings
 " =============================================================================
 
+" netrw
+" -----------------------------------------------------------------------------
 let g:netrw_liststyle=3
+
+" vim-markdown
+" -----------------------------------------------------------------------------
+let g:vim_markdown_fenced_languages =[
+    \ 'python=.py', 
+    \ 'bash=sh', 
+    \ 'ini=dowini'
+    \ ]
+
+" let g:vim_markdown_conceal
+let g:vim_markdown_follow_anchor = 1
+let g:vim_markdown_strikethrough = 1
+let g:vim_markdown_new_list_item_indent = 0
+let g:vim_markdown_no_extensions_in_markdown = 0
+let g:im_markdown_autowrite = 1
+let g:vim_markdown_edit_url_in = 'tab'
+
+" Bullets
+let g:bullets_enabled_file_types = [
+    \ 'markdown',
+    \ 'text',
+    \ 'gitcommit',
+    \ 'python'
+    \]
 
 " Nerd Tree
 " -----------------------------------------------------------------------------
@@ -78,9 +174,11 @@ nnoremap <silent> <leader>fd :e $MYVIMRC<CR>
 
 " Next tab
 nnoremap <silent> <leader>n :tabnext<CR>
+nnoremap <silent> <tab> :bnext<CR>
 
 " Previous tab
 nnoremap <silent> <leader>p :tabprev<CR>
+nnoremap <silent> <S-tab> :bprev<CR>
 
 " Expand|Shrink Window
 nnoremap <silent> <leader>h <C-w>5<
@@ -109,6 +207,15 @@ nnoremap <silent> <leader>ft :NERDTreeToggle<CR>
 " Open NERDTree
 " nnoremap <S-n> :NERDTreeToggle<CR>
 
+" Easyalign
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
+
+" vim-which-key
+
 " Y to work as D and C work
 nnoremap <S-y> y$
 
@@ -118,13 +225,15 @@ tnoremap <C-[> <C-\><C-n>
 " When /search is activated this turns off highlighting
 nnoremap <CR> :noh<CR>
 
-" Use tab to tab in normal mode
-nnoremap <tab> >>
-nnoremap <S-tab> <<
+" " Use tab to tab in normal mode
+" nnoremap <tab> >>
+" nnoremap <S-tab> <<
 
-" Use tab to tab in visual mode
-vnoremap <tab> >gv
-vnoremap <S-tab> <gv
+" " Use tab to tab in visual mode
+" vnoremap <tab> >gv
+" vnoremap <S-tab> <gv
+vnoremap > >gv
+vnoremap < <gv
 
 " Shift selction up
 vnoremap m :m '>+1<CR>gv=gv
@@ -240,3 +349,5 @@ nnoremap <silent> <leader>tv :vsplit<CR>:term<CR>:termwinsize 0x80
 let g:which_key_map.w.v = 'open-terminal-right'
 
 
+:autocmd FileType python    nnoremap <buffer> <leader>c I#<esc>
+:autocmd FileType python    nnoremap <buffer> <leader>c I#<esc>
